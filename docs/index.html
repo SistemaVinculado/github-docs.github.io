@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light"> <!-- Atributo para controlar o tema -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- O CSS está incorporado aqui para facilitar a demonstração, mas pode ser movido para um arquivo style.css -->
+    <!-- O CSS está incorporado aqui para facilitar a demonstração -->
     <style>
         :root {
+            /* Variáveis do Tema Claro (Padrão) */
             --color-bg: #ffffff;
             --color-bg-inset: #f6f8fa;
             --color-border: #d0d7de;
@@ -19,8 +20,23 @@
             --color-text-secondary: #656d76;
             --color-accent: #0969da;
             --color-accent-hover: #0a5cc9;
+            --color-link-active-bg: #ddf4ff;
+            --color-nav-hover-bg: #f0f3f6;
             --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
             --header-height: 60px;
+        }
+
+        html[data-theme="dark"] {
+            /* Variáveis do Tema Escuro */
+            --color-bg: #0d1117;
+            --color-bg-inset: #161b22;
+            --color-border: #30363d;
+            --color-text-primary: #c9d1d9;
+            --color-text-secondary: #8b949e;
+            --color-accent: #58a6ff;
+            --color-accent-hover: #79c0ff;
+            --color-link-active-bg: rgba(56, 139, 253, 0.15);
+            --color-nav-hover-bg: #21262d;
         }
 
         /* Estilos Globais */
@@ -36,6 +52,7 @@
             color: var(--color-text-primary);
             line-height: 1.6;
             font-size: 16px;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* Estrutura Principal */
@@ -56,6 +73,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
         .logo {
@@ -70,9 +88,13 @@
         .logo svg {
             width: 32px;
             height: 32px;
+            fill: currentColor;
         }
         .header-nav {
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .header-nav a {
             color: var(--color-text-primary);
@@ -82,8 +104,34 @@
             border-radius: 6px;
         }
         .header-nav a:hover {
-            background-color: #e9ecef;
+            background-color: var(--color-nav-hover-bg);
         }
+
+        /* Botão de Tema */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+        }
+        .theme-toggle:hover {
+            background-color: var(--color-nav-hover-bg);
+        }
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+        }
+        .theme-toggle .icon-sun { display: none; }
+        .theme-toggle .icon-moon { display: none; }
+
+        html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+        html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
 
         /* Conteúdo Principal (Sidebar + Main) */
         .main-wrapper {
@@ -101,11 +149,11 @@
             position: sticky;
             top: var(--header-height);
             overflow-y: auto;
+            background-color: var(--color-bg);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         
-        .sidebar-nav ul {
-            list-style: none;
-        }
+        .sidebar-nav ul { list-style: none; }
 
         .sidebar-nav .nav-category {
             font-size: 0.8rem;
@@ -115,11 +163,7 @@
             margin-top: 24px;
             margin-bottom: 8px;
         }
-
-        .sidebar-nav .nav-category:first-child {
-            margin-top: 0;
-        }
-
+        .sidebar-nav .nav-category:first-child { margin-top: 0; }
         .sidebar-nav a {
             display: block;
             color: var(--color-text-primary);
@@ -128,12 +172,13 @@
             border-radius: 6px;
             margin-bottom: 4px;
             font-size: 0.95rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
         .sidebar-nav a:hover {
-            background-color: #f0f3f6;
+            background-color: var(--color-nav-hover-bg);
         }
         .sidebar-nav a.active {
-            background-color: #ddf4ff;
+            background-color: var(--color-link-active-bg);
             color: var(--color-accent);
             font-weight: 600;
         }
@@ -152,6 +197,7 @@
             padding-bottom: 0.3em;
             margin-top: 1.5em;
             margin-bottom: 1em;
+            transition: border-color 0.2s ease;
         }
         .main-content h1 { font-size: 2.25rem; }
         .main-content h2 { font-size: 1.75rem; }
@@ -162,15 +208,14 @@
             color: var(--color-accent);
             text-decoration: none;
         }
-        .main-content a:hover {
-            text-decoration: underline;
-        }
+        .main-content a:hover { text-decoration: underline; }
         .main-content code {
             font-family: monospace;
             background-color: var(--color-bg-inset);
             padding: 0.2em 0.4em;
             border-radius: 6px;
             font-size: 85%;
+            transition: background-color 0.2s ease;
         }
         .main-content pre {
             background-color: var(--color-bg-inset);
@@ -178,6 +223,7 @@
             border-radius: 6px;
             overflow-x: auto;
             margin-bottom: 1em;
+            transition: background-color 0.2s ease;
         }
         .main-content pre code {
             padding: 0;
@@ -189,12 +235,13 @@
             padding: 0 1em;
             color: var(--color-text-secondary);
             margin: 0 0 1em 0;
+            transition: border-color 0.2s ease;
         }
 
         /* Responsividade */
         @media (max-width: 768px) {
             .sidebar {
-                display: none; /* Em uma aplicação real, aqui seria um menu hamburguer */
+                display: none;
             }
             .main-content {
                 padding: 24px;
@@ -214,6 +261,10 @@
                 <a href="#">Comunidade</a>
                 <a href="#">Blog</a>
                 <a href="#">Ajuda</a>
+                <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                    <svg class="icon-sun" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z"></path></svg>
+                    <svg class="icon-moon" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                </button>
             </nav>
         </header>
 
@@ -241,52 +292,68 @@
         </div>
     </div>
 
-    <!-- O JavaScript está incorporado aqui, mas pode ser movido para um arquivo script.js -->
+    <!-- O JavaScript está incorporado aqui -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const contentElement = document.getElementById('content');
             const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+            const themeToggleButton = document.getElementById('theme-toggle');
             const defaultPage = 'posts/introduction.md';
 
-            // Função para carregar e renderizar o conteúdo Markdown
+            // --- Lógica do Tema (Dark Mode) ---
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            const currentTheme = localStorage.getItem('theme');
+
+            const setTheme = (theme) => {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            };
+
+            // Define o tema inicial com base na preferência salva ou do sistema
+            if (currentTheme) {
+                setTheme(currentTheme);
+            } else if (prefersDarkScheme.matches) {
+                setTheme('dark');
+            }
+
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+
+            // --- Lógica de Carregamento de Conteúdo ---
             const loadContent = async (path) => {
                 try {
-                    // Adiciona um estado de carregamento
                     contentElement.innerHTML = '<h1>Carregando...</h1>';
-
                     const response = await fetch(path);
-                    if (!response.ok) {
-                        throw new Error(`Erro ao buscar o arquivo: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
                     const markdown = await response.text();
                     contentElement.innerHTML = marked.parse(markdown);
                 } catch (error) {
                     console.error('Falha ao carregar o conteúdo:', error);
-                    contentElement.innerHTML = `<h1>Erro 404</h1><p>Não foi possível encontrar o conteúdo solicitado em <code>${path}</code>.</p>`;
+                    contentElement.innerHTML = `<h1>Erro 404</h1><p>Não foi possível encontrar o conteúdo em <code>${path}</code>.</p>`;
                 }
             };
 
-            // Função para atualizar o link ativo na barra lateral
             const updateActiveLink = (targetLink) => {
                 navLinks.forEach(link => link.classList.remove('active'));
                 targetLink.classList.add('active');
-            };
+};
 
-            // Adiciona evento de clique para cada link da navegação
             navLinks.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Impede a navegação padrão
+                    event.preventDefault();
                     const path = link.getAttribute('href');
                     loadContent(path);
                     updateActiveLink(link);
-                    // Opcional: atualizar a URL com um hash
                     window.history.pushState(null, '', `#${path}`);
                 });
             });
-
-            // Carrega a página inicial padrão
+            
             loadContent(defaultPage);
         });
     </script>
 </body>
 </html>
+
