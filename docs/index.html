@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docs Clone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- O CSS está incorporado aqui para facilitar a demonstração, mas pode ser movido para um arquivo style.css -->
+    <style>
+        :root {
+            --color-bg: #ffffff;
+            --color-bg-inset: #f6f8fa;
+            --color-border: #d0d7de;
+            --color-text-primary: #1f2328;
+            --color-text-secondary: #656d76;
+            --color-accent: #0969da;
+            --color-accent-hover: #0a5cc9;
+            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            --header-height: 60px;
+        }
+
+        /* Estilos Globais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Estrutura Principal */
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Cabeçalho */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: var(--header-height);
+            border-bottom: 1px solid var(--color-border);
+            background-color: var(--color-bg-inset);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            text-decoration: none;
+        }
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        .header-nav {
+            margin-left: auto;
+        }
+        .header-nav a {
+            color: var(--color-text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        .header-nav a:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Conteúdo Principal (Sidebar + Main) */
+        .main-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        /* Barra Lateral (Sidebar) */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--color-border);
+            padding: 24px;
+            height: calc(100vh - var(--header-height));
+            position: sticky;
+            top: var(--header-height);
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav .nav-category {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-nav .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #f0f3f6;
+        }
+        .sidebar-nav a.active {
+            background-color: #ddf4ff;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            flex-grow: 1;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Estilização do Conteúdo Markdown */
+        .main-content h1, .main-content h2, .main-content h3 {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+        }
+        .main-content h1 { font-size: 2.25rem; }
+        .main-content h2 { font-size: 1.75rem; }
+        .main-content h3 { font-size: 1.25rem; }
+        .main-content p { margin-bottom: 1em; }
+        .main-content ul, .main-content ol { padding-left: 2em; margin-bottom: 1em; }
+        .main-content a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+        .main-content a:hover {
+            text-decoration: underline;
+        }
+        .main-content code {
+            font-family: monospace;
+            background-color: var(--color-bg-inset);
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-size: 85%;
+        }
+        .main-content pre {
+            background-color: var(--color-bg-inset);
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        .main-content pre code {
+            padding: 0;
+            background-color: transparent;
+            font-size: 100%;
+        }
+        .main-content blockquote {
+            border-left: 0.25em solid var(--color-border);
+            padding: 0 1em;
+            color: var(--color-text-secondary);
+            margin: 0 0 1em 0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none; /* Em uma aplicação real, aqui seria um menu hamburguer */
+            }
+            .main-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                <span>Docs Clone</span>
+            </a>
+            <nav class="header-nav">
+                <a href="#">Comunidade</a>
+                <a href="#">Blog</a>
+                <a href="#">Ajuda</a>
+            </nav>
+        </header>
+
+        <div class="main-wrapper">
+            <!-- Barra Lateral de Navegação -->
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><div class="nav-category">Começando</div></li>
+                        <li><a href="posts/introduction.md" class="nav-link active">Introdução</a></li>
+                        <li><a href="posts/getting-started.md" class="nav-link">Guia de Início Rápido</a></li>
+                    </ul>
+                    <ul>
+                        <li><div class="nav-category">Guias</div></li>
+                        <li><a href="posts/api-reference.md" class="nav-link">Referência da API</a></li>
+                        <li><a href="posts/advanced-concepts.md" class="nav-link">Conceitos Avançados</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Área de Conteúdo Principal -->
+            <main class="main-content" id="content">
+                <!-- O conteúdo Markdown será carregado aqui -->
+            </main>
+        </div>
+    </div>
+
+    <!-- O JavaScript está incorporado aqui, mas pode ser movido para um arquivo script.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentElement = document.getElementById('content');
+            const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+            const defaultPage = 'posts/introduction.md';
+
+            // Função para carregar e renderizar o conteúdo Markdown
+            const loadContent = async (path) => {
+                try {
+                    // Adiciona um estado de carregamento
+                    contentElement.innerHTML = '<h1>Carregando...</h1>';
+
+                    const response = await fetch(path);
+                    if (!response.ok) {
+                        throw new Error(`Erro ao buscar o arquivo: ${response.statusText}`);
+                    }
+                    const markdown = await response.text();
+                    contentElement.innerHTML = marked.parse(markdown);
+                } catch (error) {
+                    console.error('Falha ao carregar o conteúdo:', error);
+                    contentElement.innerHTML = `<h1>Erro 404</h1><p>Não foi possível encontrar o conteúdo solicitado em <code>${path}</code>.</p>`;
+                }
+            };
+
+            // Função para atualizar o link ativo na barra lateral
+            const updateActiveLink = (targetLink) => {
+                navLinks.forEach(link => link.classList.remove('active'));
+                targetLink.classList.add('active');
+            };
+
+            // Adiciona evento de clique para cada link da navegação
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Impede a navegação padrão
+                    const path = link.getAttribute('href');
+                    loadContent(path);
+                    updateActiveLink(link);
+                    // Opcional: atualizar a URL com um hash
+                    window.history.pushState(null, '', `#${path}`);
+                });
+            });
+
+            // Carrega a página inicial padrão
+            loadContent(defaultPage);
+        });
+    </script>
+</body>
+</html>
