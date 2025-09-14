@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light"> <!-- Atributo para controlar o tema -->
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- O CSS está incorporado aqui para facilitar a demonstração -->
+    <!-- CSS Incorporado -->
     <style>
         :root {
-            /* Variáveis do Tema Claro (Padrão) */
+            /* Tema Claro */
             --color-bg: #ffffff;
             --color-bg-inset: #f6f8fa;
             --color-border: #d0d7de;
@@ -27,7 +27,7 @@
         }
 
         html[data-theme="dark"] {
-            /* Variáveis do Tema Escuro */
+            /* Tema Escuro */
             --color-bg: #0d1117;
             --color-bg-inset: #161b22;
             --color-border: #30363d;
@@ -40,11 +40,7 @@
         }
 
         /* Estilos Globais */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--font-family-sans);
@@ -56,11 +52,7 @@
         }
 
         /* Estrutura Principal */
-        .container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+        .container { display: flex; flex-direction: column; min-height: 100vh; }
 
         /* Cabeçalho */
         .header {
@@ -76,6 +68,17 @@
             transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
+        .hamburger-btn {
+            display: none; /* Oculto em desktop */
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 12px;
+        }
+        .hamburger-btn svg { width: 20px; height: 20px; }
+
         .logo {
             display: flex;
             align-items: center;
@@ -85,11 +88,8 @@
             color: var(--color-text-primary);
             text-decoration: none;
         }
-        .logo svg {
-            width: 32px;
-            height: 32px;
-            fill: currentColor;
-        }
+        .logo svg { width: 32px; height: 32px; fill: currentColor; }
+
         .header-nav {
             margin-left: auto;
             display: flex;
@@ -103,11 +103,8 @@
             padding: 8px 12px;
             border-radius: 6px;
         }
-        .header-nav a:hover {
-            background-color: var(--color-nav-hover-bg);
-        }
+        .header-nav a:hover { background-color: var(--color-nav-hover-bg); }
 
-        /* Botão de Tema */
         .theme-toggle {
             background: none;
             border: 1px solid var(--color-border);
@@ -119,24 +116,31 @@
             justify-content: center;
             color: var(--color-text-secondary);
         }
-        .theme-toggle:hover {
-            background-color: var(--color-nav-hover-bg);
-        }
-        .theme-toggle svg {
-            width: 16px;
-            height: 16px;
-        }
-        .theme-toggle .icon-sun { display: none; }
-        .theme-toggle .icon-moon { display: none; }
-
+        .theme-toggle:hover { background-color: var(--color-nav-hover-bg); }
+        .theme-toggle svg { width: 16px; height: 16px; }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { display: none; }
         html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
         html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
+        /* Conteúdo Principal */
+        .main-wrapper { display: flex; flex-grow: 1; }
 
-        /* Conteúdo Principal (Sidebar + Main) */
-        .main-wrapper {
-            display: flex;
-            flex-grow: 1;
+        /* Fundo da Sidebar (para mobile) */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 199;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-backdrop.is-visible {
+            display: block;
+            opacity: 1;
         }
 
         /* Barra Lateral (Sidebar) */
@@ -150,11 +154,10 @@
             top: var(--header-height);
             overflow-y: auto;
             background-color: var(--color-bg);
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s ease;
         }
         
         .sidebar-nav ul { list-style: none; }
-
         .sidebar-nav .nav-category {
             font-size: 0.8rem;
             font-weight: 600;
@@ -174,9 +177,7 @@
             font-size: 0.95rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .sidebar-nav a:hover {
-            background-color: var(--color-nav-hover-bg);
-        }
+        .sidebar-nav a:hover { background-color: var(--color-nav-hover-bg); }
         .sidebar-nav a.active {
             background-color: var(--color-link-active-bg);
             color: var(--color-accent);
@@ -192,56 +193,35 @@
         }
 
         /* Estilização do Conteúdo Markdown */
-        .main-content h1, .main-content h2, .main-content h3 {
-            border-bottom: 1px solid var(--color-border);
-            padding-bottom: 0.3em;
-            margin-top: 1.5em;
-            margin-bottom: 1em;
-            transition: border-color 0.2s ease;
-        }
+        .main-content h1, .main-content h2, .main-content h3 { border-bottom: 1px solid var(--color-border); padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; transition: border-color 0.2s ease; }
         .main-content h1 { font-size: 2.25rem; }
         .main-content h2 { font-size: 1.75rem; }
         .main-content h3 { font-size: 1.25rem; }
         .main-content p { margin-bottom: 1em; }
         .main-content ul, .main-content ol { padding-left: 2em; margin-bottom: 1em; }
-        .main-content a {
-            color: var(--color-accent);
-            text-decoration: none;
-        }
+        .main-content a { color: var(--color-accent); text-decoration: none; }
         .main-content a:hover { text-decoration: underline; }
-        .main-content code {
-            font-family: monospace;
-            background-color: var(--color-bg-inset);
-            padding: 0.2em 0.4em;
-            border-radius: 6px;
-            font-size: 85%;
-            transition: background-color 0.2s ease;
-        }
-        .main-content pre {
-            background-color: var(--color-bg-inset);
-            padding: 16px;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin-bottom: 1em;
-            transition: background-color 0.2s ease;
-        }
-        .main-content pre code {
-            padding: 0;
-            background-color: transparent;
-            font-size: 100%;
-        }
-        .main-content blockquote {
-            border-left: 0.25em solid var(--color-border);
-            padding: 0 1em;
-            color: var(--color-text-secondary);
-            margin: 0 0 1em 0;
-            transition: border-color 0.2s ease;
-        }
+        .main-content code { font-family: monospace; background-color: var(--color-bg-inset); padding: 0.2em 0.4em; border-radius: 6px; font-size: 85%; transition: background-color 0.2s ease; }
+        .main-content pre { background-color: var(--color-bg-inset); padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 1em; transition: background-color 0.2s ease; }
+        .main-content pre code { padding: 0; background-color: transparent; font-size: 100%; }
+        .main-content blockquote { border-left: 0.25em solid var(--color-border); padding: 0 1em; color: var(--color-text-secondary); margin: 0 0 1em 0; transition: border-color 0.2s ease; }
 
-        /* Responsividade */
+        /* Responsividade para Tablets e Celulares */
         @media (max-width: 768px) {
+            .hamburger-btn { display: block; }
+            .header-nav a:not(:last-child) { display: none; } /* Esconde links do header, exceto o botão de tema */
+
             .sidebar {
-                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 200;
+                transform: translateX(-100%);
+                border-right: 1px solid var(--color-border);
+            }
+            .sidebar.is-open {
+                transform: translateX(0);
             }
             .main-content {
                 padding: 24px;
@@ -253,6 +233,9 @@
     <div class="container">
         <!-- Cabeçalho -->
         <header class="header">
+            <button class="hamburger-btn" id="hamburger-btn" title="Abrir menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
             <a href="#" class="logo">
                 <svg viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
                 <span>Docs Clone</span>
@@ -269,8 +252,9 @@
         </header>
 
         <div class="main-wrapper">
+            <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
             <!-- Barra Lateral de Navegação -->
-            <aside class="sidebar">
+            <aside class="sidebar" id="sidebar">
                 <nav class="sidebar-nav">
                     <ul>
                         <li><div class="nav-category">Começando</div></li>
@@ -292,13 +276,25 @@
         </div>
     </div>
 
-    <!-- O JavaScript está incorporado aqui -->
+    <!-- JavaScript Incorporado -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const contentElement = document.getElementById('content');
             const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
             const themeToggleButton = document.getElementById('theme-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const sidebarBackdrop = document.getElementById('sidebar-backdrop');
             const defaultPage = 'posts/introduction.md';
+
+            // --- Lógica do Menu Mobile ---
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('is-open');
+                sidebarBackdrop.classList.toggle('is-visible');
+            };
+
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+            sidebarBackdrop.addEventListener('click', toggleSidebar);
 
             // --- Lógica do Tema (Dark Mode) ---
             const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -309,7 +305,6 @@
                 localStorage.setItem('theme', theme);
             };
 
-            // Define o tema inicial com base na preferência salva ou do sistema
             if (currentTheme) {
                 setTheme(currentTheme);
             } else if (prefersDarkScheme.matches) {
@@ -321,11 +316,10 @@
                 setTheme(newTheme);
             });
 
-
             // --- Lógica de Carregamento de Conteúdo ---
             const loadContent = async (path) => {
                 try {
-                    contentElement.innerHTML = '<h1>Carregando...</h1>';
+                    contentElement.innerHTML = '<h1>A carregar...</h1>';
                     const response = await fetch(path);
                     if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
                     const markdown = await response.text();
@@ -339,7 +333,7 @@
             const updateActiveLink = (targetLink) => {
                 navLinks.forEach(link => link.classList.remove('active'));
                 targetLink.classList.add('active');
-};
+            };
 
             navLinks.forEach(link => {
                 link.addEventListener('click', (event) => {
@@ -347,6 +341,10 @@
                     const path = link.getAttribute('href');
                     loadContent(path);
                     updateActiveLink(link);
+                    // Fecha a sidebar no mobile após clicar num link
+                    if (sidebar.classList.contains('is-open')) {
+                        toggleSidebar();
+                    }
                     window.history.pushState(null, '', `#${path}`);
                 });
             });
