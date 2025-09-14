@@ -1,55 +1,518 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br" class="light-theme">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Meta Tags Dinâmicas (geridas por JS) -->
-    <title>Pitchutcha Docs</title>
-    <meta name="description" content="A sua central de conhecimento para o projeto Pitchutcha.">
-    <meta property="og:title" content="Pitchutcha Docs">
-    <meta property="og:description" content="A sua central de conhecimento para o projeto Pitchutcha.">
-    <!-- <meta property="og:image" content="url_da_imagem_padrao.jpg"> -->
-
-    <link rel="stylesheet" href="style.css">
+    <title>Réplica do GitHub Docs (Atualizado)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <script src="script.js" defer></script>
+
+    <style>
+        /* --- Reset Básico e Definições de Variáveis --- */
+        :root {
+            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+            /* Cores - Tema Claro (Light Theme) */
+            --color-bg-default: #ffffff;
+            --color-bg-muted: #f6f8fa;
+            --color-border-default: #d0d7de;
+            --color-border-muted: #d8dee4;
+            --color-fg-default: #1f2328;
+            --color-fg-muted: #57606a;
+            --color-fg-subtle: #6e7781;
+            --color-accent-fg: #0969da;
+            --color-accent-emphasis: #0969da;
+            --color-accent-bg: #ddf4ff;
+            --color-success-fg: #1a7f37;
+            --color-attention-fg: #9a6700;
+            --color-danger-fg: #d1242f;
+            --color-success-bg: #dafbe1;
+            --color-attention-bg: #fff8c5;
+            --color-danger-bg: #ffebe9;
+            --color-code-bg: #eff1f3;
+            --color-shadow-small: 0 1px 0 rgba(27, 31, 36, 0.04);
+            --color-shadow-medium: 0 3px 6px rgba(140, 149, 159, 0.15);
+        }
+
+        html.dark-theme {
+            /* Cores - Tema Escuro (Dark Theme) */
+            --color-bg-default: #0d1117;
+            --color-bg-muted: #161b22;
+            --color-border-default: #30363d;
+            --color-border-muted: #21262d;
+            --color-fg-default: #e6edf3;
+            --color-fg-muted: #7d8590;
+            --color-fg-subtle: #6e7781;
+            --color-accent-fg: #58a6ff;
+            --color-accent-emphasis: #1f6feb;
+            --color-accent-bg: rgba(56, 139, 253, 0.15);
+            --color-success-fg: #3fb950;
+            --color-attention-fg: #d29922;
+            --color-danger-fg: #f85149;
+            --color-success-bg: rgba(46, 160, 67, 0.15);
+            --color-attention-bg: rgba(187, 128, 9, 0.15);
+            --color-danger-bg: rgba(248, 81, 73, 0.15);
+            --color-code-bg: #161b22;
+            --color-shadow-small: 0 0 transparent;
+            --color-shadow-medium: 0 3px 6px #010409;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            background-color: var(--color-bg-default);
+            color: var(--color-fg-default);
+            line-height: 1.6;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* --- Estrutura Principal e Layout --- */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            flex-grow: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .main-content-area {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 240px;
+            gap: 2rem;
+            padding: 2rem 1.5rem;
+        }
+
+        main {
+            min-width: 0; /* Previne overflow de conteúdo flex/grid */
+        }
+
+        /* --- Cabeçalho (Header) --- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background-color: var(--color-bg-muted);
+            border-bottom: 1px solid var(--color-border-default);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 1.2rem; color: var(--color-fg-default); text-decoration: none; }
+        .logo svg { fill: var(--color-fg-default); }
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-fg-default); }
+        .search-bar { position: relative; }
+        .search-input { background-color: var(--color-bg-default); border: 1px solid var(--color-border-default); border-radius: 6px; padding: 0.5rem 0.75rem; padding-right: 2.5rem; width: 300px; color: var(--color-fg-default); transition: all 0.2s ease; }
+        .search-input:focus { border-color: var(--color-accent-fg); box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3); outline: none; }
+        .search-shortcut { position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: 1px solid var(--color-border-muted); border-radius: 4px; padding: 2px 6px; font-size: 0.75rem; color: var(--color-fg-muted); }
+        .header-right { display: flex; align-items: center; gap: 1rem; }
+        .theme-toggle-btn { background: none; border: 1px solid var(--color-border-default); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-fg-muted); transition: border-color 0.2s ease; }
+        .theme-toggle-btn:hover { border-color: var(--color-fg-muted); }
+        .theme-toggle-btn .icon-sun { display: none; }
+        .theme-toggle-btn .icon-moon { display: block; }
+        html.dark-theme .theme-toggle-btn .icon-sun { display: block; }
+        html.dark-theme .theme-toggle-btn .icon-moon { display: none; }
+
+        /* --- Barra Lateral de Navegação (Sidebar) --- */
+        .sidebar { border-right: 1px solid var(--color-border-default); padding: 2rem 1rem; height: calc(100vh - 65px); position: sticky; top: 65px; overflow-y: auto; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav .nav-category > button { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; padding: 0.5rem 1rem; text-align: left; font-weight: 600; color: var(--color-fg-default); font-size: 1rem; cursor: pointer; border-radius: 6px; }
+        .sidebar nav .nav-category > button:hover { background-color: var(--color-bg-muted); }
+        .sidebar nav .nav-category .chevron { transition: transform 0.2s ease; }
+        .sidebar nav .nav-category > button[aria-expanded="false"] .chevron { transform: rotate(-90deg); }
+        .sidebar nav ul li a { display: block; padding: 0.4rem 1rem; text-decoration: none; color: var(--color-fg-muted); border-radius: 6px; font-size: 0.9rem; transition: background-color 0.2s, color 0.2s; }
+        .sidebar nav ul li a:hover { background-color: var(--color-bg-muted); color: var(--color-fg-default); }
+        .sidebar nav ul li a.active { background-color: var(--color-accent-bg); color: var(--color-accent-emphasis); font-weight: 600; }
+        .sidebar nav .nav-category { margin-bottom: 1rem; }
+        .sidebar nav .nav-links { padding-left: 1rem; margin-top: 0.5rem; overflow: hidden; max-height: 1000px; /* Animação */ transition: max-height 0.4s ease-in-out; }
+        .sidebar nav .nav-links.collapsed { max-height: 0; }
+
+        /* --- Conteúdo Principal (Main) --- */
+        .breadcrumb { font-size: 0.85rem; color: var(--color-fg-muted); margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--color-accent-fg); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        main h1, main h2, main h3, main h4 { scroll-margin-top: 80px; /* Offset para links de âncora */ }
+        main h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--color-border-muted); padding-bottom: 0.5rem; }
+        main h2 { font-size: 1.75rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--color-border-muted); padding-bottom: 0.5rem; }
+        main h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 1rem; }
+        main p { margin-bottom: 1rem; }
+        main a { color: var(--color-accent-fg); text-decoration: none; }
+        main a:hover { text-decoration: underline; }
+        main ul, main ol { margin-bottom: 1rem; padding-left: 2rem; }
+        
+        /* Blocos de Código e Abas */
+        .code-block-container { margin-bottom: 1rem; border: 1px solid var(--color-border-default); border-radius: 6px; overflow: hidden; }
+        .code-tabs { display: flex; background-color: var(--color-bg-muted); border-bottom: 1px solid var(--color-border-default); }
+        .code-tab { padding: 0.75rem 1rem; cursor: pointer; background: none; border: none; color: var(--color-fg-muted); border-bottom: 2px solid transparent; font-family: var(--font-family-sans); }
+        .code-tab.active { color: var(--color-fg-default); font-weight: 600; border-bottom-color: var(--color-accent-fg); }
+        .code-content { display: none; }
+        .code-content.active { display: block; }
+        pre { background-color: var(--color-code-bg); border: none; border-radius: 0; padding: 1rem; margin-bottom: 0; overflow-x: auto; position: relative; }
+        code { font-family: var(--font-family-mono); font-size: 0.875rem; }
+        p > code, li > code { background-color: var(--color-code-bg); padding: 0.2em 0.4em; border-radius: 6px; }
+        .copy-code-btn { position: absolute; top: 0.5rem; right: 0.5rem; background-color: var(--color-bg-muted); border: 1px solid var(--color-border-default); border-radius: 6px; padding: 0.25rem 0.5rem; cursor: pointer; color: var(--color-fg-muted); opacity: 0; transition: opacity 0.2s ease-in-out, background-color 0.2s; }
+        pre:hover .copy-code-btn { opacity: 1; }
+        .copy-code-btn:hover { background-color: var(--color-border-default); }
+
+        /* Alertas / Callouts */
+        .alert { padding: 1rem 1.5rem; margin-bottom: 1rem; border-left: .25em solid; border-radius: 6px; }
+        .alert-note { background-color: var(--color-accent-bg); border-color: var(--color-accent-emphasis); color: var(--color-accent-fg); }
+        .alert-success { background-color: var(--color-success-bg); border-color: var(--color-success-fg); color: var(--color-success-fg); }
+        .alert-warning { background-color: var(--color-attention-bg); border-color: var(--color-attention-fg); color: var(--color-attention-fg); }
+
+        /* Tabela */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; overflow: hidden; }
+        th, td { padding: 0.75rem; border: 1px solid var(--color-border-default); text-align: left; }
+        th { background-color: var(--color-bg-muted); }
+        
+        /* --- Tabela de Conteúdos (TOC - On This Page) --- */
+        .toc-wrapper { position: sticky; top: 85px; height: calc(100vh - 85px); }
+        .toc-wrapper h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+        .toc-list { list-style: none; }
+        .toc-list li a { display: block; padding: 0.25rem 0; color: var(--color-fg-muted); text-decoration: none; font-size: 0.85rem; border-left: 2px solid transparent; padding-left: 1rem; transition: all 0.2s ease; }
+        .toc-list li a:hover { color: var(--color-fg-default); }
+        .toc-list li a.active { color: var(--color-accent-fg); font-weight: 600; border-left-color: var(--color-accent-fg); }
+        .toc-list .toc-h3 { padding-left: 2rem; }
+        
+        /* --- Widget de Feedback --- */
+        .feedback-widget { border-top: 1px solid var(--color-border-default); margin-top: 3rem; padding-top: 2rem; text-align: center; }
+        .feedback-widget h4 { margin-bottom: 1rem; font-weight: 600; }
+        .feedback-buttons button { background-color: var(--color-bg-muted); border: 1px solid var(--color-border-default); border-radius: 6px; padding: 0.5rem 1rem; margin: 0 0.5rem; cursor: pointer; transition: all 0.2s ease; }
+        .feedback-buttons button:hover { background-color: var(--color-bg-default); border-color: var(--color-fg-muted); }
+        #feedback-response { margin-top: 1rem; color: var(--color-success-fg); }
+
+        /* --- Rodapé (Footer) --- */
+        .footer { padding: 2rem 1.5rem; text-align: center; font-size: 0.85rem; color: var(--color-fg-muted); border-top: 1px solid var(--color-border-default); margin-top: auto; }
+        
+        /* --- Responsividade --- */
+        @media (max-width: 1200px) { .main-content-area { grid-template-columns: minmax(0, 1fr) 200px; } }
+        @media (max-width: 1024px) { .main-wrapper { grid-template-columns: 240px 1fr; } .main-content-area { grid-template-columns: minmax(0, 1fr); } .toc-wrapper { display: none; } }
+        @media (max-width: 768px) { .main-wrapper { grid-template-columns: 1fr; } .sidebar { position: fixed; left: 0; top: 65px; width: 280px; background-color: var(--color-bg-default); transform: translateX(-100%); transition: transform 0.3s ease; z-index: 200; height: calc(100vh - 65px); } .sidebar.open { transform: translateX(0); box-shadow: var(--color-shadow-medium); } .header-left .search-bar { display: none; } .mobile-menu-btn { display: block; } }
+
+    </style>
 </head>
+
 <body>
-    <div class="container">
+
+    <div class="page-container">
+        <!-- Cabeçalho Fixo -->
         <header class="header">
-            <!-- Botão Hambúrguer, Logo, etc. -->
-            <nav class="header-nav" aria-label="Navegação principal">
-                <div class="language-switcher">
-                    <button id="lang-switcher-btn" class="lang-switcher-btn" aria-label="Mudar idioma">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C17.5 22 22 17.5 22 12S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10Z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        <span id="current-lang">PT-BR</span>
-                    </button>
-                </div>
-                <!-- Botão de Tema -->
-            </nav>
+            <div class="header-left">
+                <button class="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <a href="#" class="logo">
+                    <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.19.01-.82.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21-.15.46-.55.38A8.013 8.013 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+                    <span>Docs</span>
+                </a>
+            </div>
+             <div class="search-bar">
+                <input type="text" placeholder="Pesquisar na documentação..." class="search-input" id="search-input">
+                <span class="search-shortcut">/</span>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle-btn" aria-label="Alternar tema">
+                    <svg class="icon-moon" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M9.598 1.591a.75.75 0 01.782 1.027A5.468 5.468 0 008.25 8.25a5.468 5.468 0 00-2.131-4.632.75.75 0 11.782-1.027A7.001 7.001 0 1014.25 8.25a.75.75 0 011.5 0A8.5 8.5 0 119.598 1.59z" fill="currentColor"></path></svg>
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 14a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 14zM4.134 4.134a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061L4.134 5.195a.75.75 0 010-1.06zm9.732 9.732a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM0 8a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H.75A.75.75 0 010 8zm14 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5A.75.75 0 0114 8zM5.195 11.866a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 01-1.061-1.06l1.06-1.061a.75.75 0 011.061 0zm9.732-9.732a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 01-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z" fill="currentColor"></path></svg>
+                </button>
+            </div>
         </header>
 
         <div class="main-wrapper">
-            <!-- Barras Laterais (Esquerda e Direita) -->
-            <main class="main-content">
-                <div id="breadcrumbs"></div>
-                <div id="article-meta" class="is-hidden">
-                    <div class="meta-info">
-                        <span id="reading-time"></span>
-                        <span id="last-updated"></span>
+            <aside class="sidebar" id="sidebar">
+                <nav id="sidebar-nav">
+                    <ul>
+                        <li class="nav-category">
+                            <button aria-expanded="true">
+                                <span>Começar</span>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.427 7.427a.25.25 0 00-.024 0l-.003.002A.25.25 0 004 8a.25.25 0 00.198.248l.002.001.006.002.024.001h7.05a.25.25 0 00.198-.401l-3.525-3.525a.25.25 0 00-.354 0l-3.525 3.525a.25.25 0 00-.023.099z" transform="rotate(90 8 8)"></path></svg>
+                            </button>
+                            <ul class="nav-links">
+                                <li><a href="#" class="active">Guia de Início Rápido</a></li>
+                                <li><a href="#">Criando uma conta</a></li>
+                                <li><a href="#">Configurando seu perfil</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-category">
+                            <button aria-expanded="false">
+                                <span>GitHub Actions</span>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.427 7.427a.25.25 0 00-.024 0l-.003.002A.25.25 0 004 8a.25.25 0 00.198.248l.002.001.006.002.024.001h7.05a.25.25 0 00.198-.401l-3.525-3.525a.25.25 0 00-.354 0l-3.525 3.525a.25.25 0 00-.023.099z" transform="rotate(90 8 8)"></path></svg>
+                            </button>
+                            <ul class="nav-links collapsed">
+                                <li><a href="#">Introdução às Actions</a></li>
+                                <li><a href="#">Construindo e testando código</a></li>
+                                <li><a href="#">Gerenciando workflows</a></li>
+                                <li><a href="#">Workflows de exemplo</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-category">
+                            <button aria-expanded="false">
+                                <span>Segurança</span>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.427 7.427a.25.25 0 00-.024 0l-.003.002A.25.25 0 004 8a.25.25 0 00.198.248l.002.001.006.002.024.001h7.05a.25.25 0 00.198-.401l-3.525-3.525a.25.25 0 00-.354 0l-3.525 3.525a.25.25 0 00-.023.099z" transform="rotate(90 8 8)"></path></svg>
+                            </button>
+                            <ul class="nav-links collapsed">
+                                <li><a href="#">Escaneamento de código</a></li>
+                                <li><a href="#">Escaneamento de segredos</a></li>
+                                <li><a href="#">Dependabot</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <div class="main-content-area">
+                <main id="main-content">
+                    <div class="breadcrumb">
+                        <a href="#">Começar</a> / <span>Guia de Início Rápido</span>
                     </div>
-                    <a id="edit-on-github" href="#" target="_blank" rel="noopener noreferrer">Editar esta página no GitHub</a>
-                </div>
-                <div id="content-area"></div>
-                <!-- Navegação de Artigo, Widget de Feedback, etc. -->
-            </main>
+
+                    <h1 id="titulo-principal">Guia de Início Rápido para GitHub</h1>
+                    <p>Este guia irá orientá-lo através dos passos essenciais para começar a usar o GitHub, desde a criação do seu primeiro repositório até o seu primeiro commit.</p>
+
+                    <div class="alert alert-note"><strong>Nota:</strong> Este é um guia para iniciantes. Para tópicos avançados, consulte as seções específicas da documentação.</div>
+
+                    <h2 id="criando-um-repositorio">Criando um Repositório</h2>
+                    <p>Um repositório é como uma pasta para o seu projeto. O seu projeto pode conter qualquer tipo de arquivo, como código, imagens ou arquivos de áudio.</p>
+                    <ol>
+                        <li>No canto superior direito, use o menu suspenso e selecione <strong>Novo repositório</strong>.</li>
+                        <li>Digite um nome curto e memorável para o seu repositório. Por exemplo, "hello-world".</li>
+                        <li>Escolha a visibilidade do repositório (Público ou Privado).</li>
+                        <li>Selecione <strong>Inicializar este repositório com um README</strong>.</li>
+                        <li>Clique em <strong>Criar repositório</strong>.</li>
+                    </ol>
+                    
+                    <h2 id="fazendo-seu-primeiro-commit">Fazendo seu primeiro commit</h2>
+                    <p>Um commit é como um snapshot das alterações feitas nos seus arquivos. Fazer commits permite que você salve o seu trabalho em pontos específicos.</p>
+
+                    <h3 id="editando-o-arquivo-readme">Editando o arquivo README</h3>
+                    <p>Para editar o arquivo, clique no ícone de lápis. No editor, escreva um pouco sobre você. Quando estiver satisfeito, escreva uma mensagem de commit que descreva as suas alterações.</p>
+                    
+                    <h2 id="novas-funcionalidades-e-elementos">Novas Funcionalidades e Elementos</h2>
+                    <p>Esta versão do site inclui novas funcionalidades interativas, como blocos de código com abas para diferentes linguagens.</p>
+                    
+                    <div class="code-block-container">
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-lang="html">HTML</button>
+                            <button class="code-tab" data-lang="css">CSS</button>
+                            <button class="code-tab" data-lang="js">JavaScript</button>
+                        </div>
+                        <div class="code-content active" data-lang-content="html">
+                            <pre><button class="copy-code-btn" aria-label="Copiar código">Copiar</button><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Meu Primeiro Título&lt;/h1&gt;
+    &lt;p&gt;Meu primeiro parágrafo.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        </div>
+                        <div class="code-content" data-lang-content="css">
+                             <pre><button class="copy-code-btn" aria-label="Copiar código">Copiar</button><code>body {
+  background-color: lightblue;
+}
+h1 {
+  color: white;
+  text-align: center;
+}</code></pre>
+                        </div>
+                        <div class="code-content" data-lang-content="js">
+                             <pre><button class="copy-code-btn" aria-label="Copiar código">Copiar</button><code>document.addEventListener('DOMContentLoaded', () => {
+  console.log("Documento carregado!");
+});</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="feedback-widget">
+                        <h4>Este artigo foi útil?</h4>
+                        <div class="feedback-buttons">
+                            <button id="feedback-yes">👍 Sim</button>
+                            <button id="feedback-no">👎 Não</button>
+                        </div>
+                        <p id="feedback-response" style="display: none;"></p>
+                    </div>
+
+                </main>
+
+                <aside class="toc-wrapper">
+                    <h3>Nesta Página</h3>
+                    <ul class="toc-list" id="toc-list"></ul>
+                </aside>
+            </div>
         </div>
+        
+        <footer class="footer">
+            © 2025 GitHub, Inc. Réplica criada para fins de demonstração.
+        </footer>
     </div>
-    <!-- Modais e Botão "Voltar ao Topo" -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- INICIALIZAÇÃO DOS ELEMENTOS ---
+            const themeToggleButton = document.querySelector('.theme-toggle-btn');
+            const mobileMenuButton = document.querySelector('.mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const searchInput = document.getElementById('search-input');
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const tocList = document.getElementById('toc-list');
+            const mainContentHeadings = document.querySelectorAll('main h1, main h2, main h3');
+
+            // --- GERENCIADOR DE TEMA (CLARO/ESCURO) ---
+            const applyTheme = (theme) => {
+                document.documentElement.className = theme;
+                localStorage.setItem('theme', theme);
+            };
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.classList.contains('light-theme') ? 'dark-theme' : 'light-theme';
+                applyTheme(newTheme);
+            });
+            applyTheme(localStorage.getItem('theme') || 'light-theme');
+
+            // --- MENU MOBILE ---
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = sidebar.classList.toggle('open');
+                mobileMenuButton.setAttribute('aria-expanded', isExpanded);
+            });
+            document.addEventListener('click', (e) => {
+                if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // --- NAVEGAÇÃO RECOLHÍVEL (SIDEBAR) ---
+            const navCategories = document.querySelectorAll('.nav-category > button');
+            navCategories.forEach(button => {
+                button.addEventListener('click', () => {
+                    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                    button.setAttribute('aria-expanded', !isExpanded);
+                    const linksWrapper = button.nextElementSibling;
+                    linksWrapper.classList.toggle('collapsed');
+                });
+            });
+
+            // --- SIMULAÇÃO DE BUSCA NA SIDEBAR ---
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const allLinks = sidebarNav.querySelectorAll('li');
+                
+                allLinks.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    const hasMatch = text.includes(searchTerm);
+                    item.style.display = hasMatch ? '' : 'none';
+                });
+            });
+            
+            // --- ATALHO DE BUSCA (TECLA '/') ---
+            window.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+
+            // --- ABAS DE BLOCO DE CÓDIGO ---
+            const codeContainers = document.querySelectorAll('.code-block-container');
+            codeContainers.forEach(container => {
+                const tabs = container.querySelectorAll('.code-tab');
+                const contents = container.querySelectorAll('.code-content');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const lang = tab.dataset.lang;
+                        contents.forEach(content => {
+                            content.classList.remove('active');
+                            if (content.dataset.langContent === lang) {
+                                content.classList.add('active');
+                            }
+                        });
+                    });
+                });
+            });
+
+            // --- FUNCIONALIDADE DE COPIAR CÓDIGO ---
+            document.querySelectorAll('.copy-code-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const pre = button.parentElement;
+                    const code = pre.querySelector('code');
+                    navigator.clipboard.writeText(code.innerText).then(() => {
+                        button.textContent = 'Copiado!';
+                        setTimeout(() => { button.textContent = 'Copiar'; }, 2000);
+                    });
+                });
+            });
+
+            // --- GERAÇÃO E SCROLLSPY DA TABELA DE CONTEÚDOS (IntersectionObserver) ---
+            if (tocList && mainContentHeadings.length > 0) {
+                let activeId = '';
+                
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            activeId = entry.target.id;
+                        }
+                    });
+
+                    // Atualiza a classe 'active' em todos os links da TOC
+                    tocList.querySelectorAll('a').forEach(link => {
+                        link.classList.toggle('active', link.hash === `#${activeId}`);
+                    });
+                }, { rootMargin: '0px 0px -80% 0px', threshold: 0.1 }); // Observa o topo da viewport
+
+                mainContentHeadings.forEach(heading => {
+                    if (heading.id) {
+                        // Gera o link na TOC
+                        const listItem = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.textContent = heading.textContent;
+                        link.href = `#${heading.id}`;
+                        link.className = `toc-${heading.tagName.toLowerCase()}`;
+                        listItem.appendChild(link);
+                        tocList.appendChild(listItem);
+
+                        // Observa o elemento de título
+                        observer.observe(heading);
+                    }
+                });
+            }
+            
+            // --- WIDGET DE FEEDBACK ---
+            const feedbackYes = document.getElementById('feedback-yes');
+            const feedbackNo = document.getElementById('feedback-no');
+            const feedbackResponse = document.getElementById('feedback-response');
+            
+            const handleFeedback = (e) => {
+                e.target.parentElement.style.display = 'none';
+                feedbackResponse.textContent = 'Obrigado pelo seu feedback!';
+                feedbackResponse.style.display = 'block';
+            };
+
+            if(feedbackYes && feedbackNo) {
+                feedbackYes.addEventListener('click', handleFeedback);
+                feedbackNo.addEventListener('click', handleFeedback);
+            }
+        });
+    </script>
 </body>
 </html>
 
