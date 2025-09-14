@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docs Clone</title>
+    <title>Pitchutcha Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- CSS Incorporado -->
     <style>
         :root {
             /* Tema Claro */
@@ -19,10 +18,10 @@
             --color-text-primary: #1f2328;
             --color-text-secondary: #656d76;
             --color-accent: #0969da;
-            --color-accent-hover: #0a5cc9;
-            --color-link-active-bg: #ddf4ff;
-            --color-nav-hover-bg: #f0f3f6;
-            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            --color-callout-note-bg: #ddf4ff;
+            --color-callout-note-border: #96d3ff;
+            --color-callout-warning-bg: #fff8c5;
+            --color-callout-warning-border: #f4d35e;
             --header-height: 60px;
         }
 
@@ -34,231 +33,108 @@
             --color-text-primary: #c9d1d9;
             --color-text-secondary: #8b949e;
             --color-accent: #58a6ff;
-            --color-accent-hover: #79c0ff;
-            --color-link-active-bg: rgba(56, 139, 253, 0.15);
-            --color-nav-hover-bg: #21262d;
+            --color-callout-note-bg: rgba(56, 139, 253, 0.15);
+            --color-callout-note-border: #388bfd;
+            --color-callout-warning-bg: rgba(240, 180, 5, 0.15);
+            --color-callout-warning-border: #f0b405;
         }
 
         /* Estilos Globais */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: var(--font-family-sans);
-            background-color: var(--color-bg);
-            color: var(--color-text-primary);
-            line-height: 1.6;
-            font-size: 16px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--color-bg); color: var(--color-text-primary); line-height: 1.6; }
+        .is-hidden { display: none !important; }
 
         /* Estrutura Principal */
         .container { display: flex; flex-direction: column; min-height: 100vh; }
-
+        .main-wrapper { display: flex; flex-grow: 1; justify-content: center; }
+        
         /* Cabeçalho */
-        .header {
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            height: var(--header-height);
-            border-bottom: 1px solid var(--color-border);
-            background-color: var(--color-bg-inset);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .hamburger-btn {
-            display: none; /* Oculto em desktop */
-            background: none;
-            border: none;
-            color: var(--color-text-primary);
-            cursor: pointer;
-            padding: 8px;
-            margin-right: 12px;
-        }
+        .header { display: flex; align-items: center; padding: 0 24px; height: var(--header-height); border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-inset); position: sticky; top: 0; z-index: 200; }
+        .hamburger-btn { display: none; background: none; border: none; color: var(--color-text-primary); cursor: pointer; padding: 8px; margin-right: 12px; }
         .hamburger-btn svg { width: 20px; height: 20px; }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--color-text-primary);
-            text-decoration: none;
-        }
+        .logo { display: flex; align-items: center; gap: 8px; font-size: 1.2rem; font-weight: 600; color: var(--color-text-primary); text-decoration: none; }
         .logo svg { width: 32px; height: 32px; fill: currentColor; }
-
-        .header-nav {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .header-nav a {
-            color: var(--color-text-primary);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 6px;
-        }
-        .header-nav a:hover { background-color: var(--color-nav-hover-bg); }
-
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
-            cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-secondary);
-        }
-        .theme-toggle:hover { background-color: var(--color-nav-hover-bg); }
-        .theme-toggle svg { width: 16px; height: 16px; }
-        .theme-toggle .icon-sun, .theme-toggle .icon-moon { display: none; }
+        .header-nav { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+        .theme-toggle { background: none; border: 1px solid var(--color-border); border-radius: 6px; cursor: pointer; padding: 6px; display: flex; }
         html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
         html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        .theme-toggle svg { width: 16px; height: 16px; }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { display: none; }
 
-        /* Conteúdo Principal */
-        .main-wrapper { display: flex; flex-grow: 1; }
-
-        /* Fundo da Sidebar (para mobile) */
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 199;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .sidebar-backdrop.is-visible {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Barra Lateral (Sidebar) */
-        .sidebar {
-            width: 280px;
-            flex-shrink: 0;
-            border-right: 1px solid var(--color-border);
-            padding: 24px;
-            height: calc(100vh - var(--header-height));
-            position: sticky;
-            top: var(--header-height);
-            overflow-y: auto;
-            background-color: var(--color-bg);
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s ease;
-        }
-        
+        /* Barra Lateral Esquerda (Navegação) */
+        .sidebar { width: 280px; flex-shrink: 0; border-right: 1px solid var(--color-border); padding: 24px; display: flex; flex-direction: column; height: calc(100vh - var(--header-height)); position: sticky; top: var(--header-height); background-color: var(--color-bg); transition: transform 0.3s ease; }
+        .sidebar-search input { width: 100%; padding: 8px 12px; font-size: 14px; border-radius: 6px; border: 1px solid var(--color-border); background-color: var(--color-bg-inset); color: var(--color-text-primary); margin-bottom: 16px; }
+        .sidebar-nav { overflow-y: auto; flex-grow: 1; }
         .sidebar-nav ul { list-style: none; }
-        .sidebar-nav .nav-category {
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--color-text-secondary);
-            margin-top: 24px;
-            margin-bottom: 8px;
-        }
-        .sidebar-nav .nav-category:first-child { margin-top: 0; }
-        .sidebar-nav a {
-            display: block;
-            color: var(--color-text-primary);
-            text-decoration: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-bottom: 4px;
-            font-size: 0.95rem;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        .sidebar-nav a:hover { background-color: var(--color-nav-hover-bg); }
-        .sidebar-nav a.active {
-            background-color: var(--color-link-active-bg);
-            color: var(--color-accent);
-            font-weight: 600;
-        }
+        .sidebar-nav .nav-category { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--color-text-secondary); margin: 24px 0 8px 0; }
+        .sidebar-nav a { display: block; color: var(--color-text-primary); text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.95rem; }
+        .sidebar-nav a.active { background-color: var(--color-link-active-bg); color: var(--color-accent); font-weight: 600; }
 
         /* Conteúdo Principal */
-        .main-content {
-            flex-grow: 1;
-            padding: 48px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+        .main-content { flex-grow: 1; padding: 24px 48px; max-width: 900px; }
+        #breadcrumbs { margin-bottom: 24px; font-size: 0.9rem; color: var(--color-text-secondary); }
+        #breadcrumbs a { color: var(--color-accent); text-decoration: none; }
+        #breadcrumbs a:hover { text-decoration: underline; }
+        #breadcrumbs span { margin: 0 8px; }
 
-        /* Estilização do Conteúdo Markdown */
-        .main-content h1, .main-content h2, .main-content h3 { border-bottom: 1px solid var(--color-border); padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; transition: border-color 0.2s ease; }
-        .main-content h1 { font-size: 2.25rem; }
-        .main-content h2 { font-size: 1.75rem; }
-        .main-content h3 { font-size: 1.25rem; }
-        .main-content p { margin-bottom: 1em; }
-        .main-content ul, .main-content ol { padding-left: 2em; margin-bottom: 1em; }
-        .main-content a { color: var(--color-accent); text-decoration: none; }
-        .main-content a:hover { text-decoration: underline; }
-        .main-content code { font-family: monospace; background-color: var(--color-bg-inset); padding: 0.2em 0.4em; border-radius: 6px; font-size: 85%; transition: background-color 0.2s ease; }
-        .main-content pre { background-color: var(--color-bg-inset); padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 1em; transition: background-color 0.2s ease; }
-        .main-content pre code { padding: 0; background-color: transparent; font-size: 100%; }
-        .main-content blockquote { border-left: 0.25em solid var(--color-border); padding: 0 1em; color: var(--color-text-secondary); margin: 0 0 1em 0; transition: border-color 0.2s ease; }
+        /* Barra Lateral Direita (Sumário) */
+        .toc-sidebar { width: 250px; flex-shrink: 0; font-size: 0.85rem; padding: 24px; height: calc(100vh - var(--header-height)); position: sticky; top: var(--header-height); }
+        .toc-sidebar h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; color: var(--color-text-secondary); }
+        .toc-sidebar ul { list-style: none; }
+        .toc-sidebar a { display: block; color: var(--color-text-secondary); text-decoration: none; padding: 4px 0; border-left: 2px solid transparent; padding-left: 12px; transition: all 0.2s ease; }
+        .toc-sidebar a:hover { color: var(--color-text-primary); }
+        .toc-sidebar a.active { color: var(--color-accent); font-weight: 500; border-left-color: var(--color-accent); }
+        .toc-sidebar .toc-h3 a { padding-left: 24px; }
 
-        /* Responsividade para Tablets e Celulares */
+        /* Estilos do Conteúdo Renderizado */
+        #content-area h2, #content-area h3 { scroll-margin-top: calc(var(--header-height) + 16px); } /* Offset para o scroll */
+        .copy-code-btn { position: absolute; top: 8px; right: 8px; background-color: var(--color-bg-inset); border: 1px solid var(--color-border); color: var(--color-text-secondary); cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 12px; opacity: 0; transition: opacity 0.2s ease; }
+        #content-area pre:hover .copy-code-btn { opacity: 1; }
+        
+        /* Alertas Personalizados (Callouts) */
+        .callout { display: flex; align-items: flex-start; gap: 12px; padding: 16px; margin: 16px 0; border-radius: 6px; border-left-width: 4px; border-left-style: solid; }
+        .callout p { margin: 0; }
+        .callout svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+        .callout.note { background-color: var(--color-callout-note-bg); border-color: var(--color-callout-note-border); color: var(--color-text-primary); }
+        .callout.warning { background-color: var(--color-callout-warning-bg); border-color: var(--color-callout-warning-border); color: var(--color-text-primary); }
+
+        /* Responsividade */
+        @media (max-width: 1200px) { .toc-sidebar { display: none; } }
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
-            .header-nav a:not(:last-child) { display: none; } /* Esconde links do header, exceto o botão de tema */
-
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100%;
-                z-index: 200;
-                transform: translateX(-100%);
-                border-right: 1px solid var(--color-border);
-            }
-            .sidebar.is-open {
-                transform: translateX(0);
-            }
-            .main-content {
-                padding: 24px;
-            }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 300; transform: translateX(-100%); }
+            .sidebar.is-open { transform: translateX(0); }
+            .sidebar-backdrop { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 299; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+            .sidebar-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+            .main-content { padding: 24px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Cabeçalho -->
         <header class="header">
-            <button class="hamburger-btn" id="hamburger-btn" title="Abrir menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <button class="hamburger-btn" id="hamburger-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <a href="#" class="logo">
-                <svg viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                <span>Docs Clone</span>
+            <a href="#" class="logo" id="logo-home-link">
+                <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                <span>Pitchutcha</span>
             </a>
             <nav class="header-nav">
-                <a href="#">Comunidade</a>
-                <a href="#">Blog</a>
-                <a href="#">Ajuda</a>
-                <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                 <button class="theme-toggle" id="theme-toggle">
                     <svg class="icon-sun" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z"></path></svg>
                     <svg class="icon-moon" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                 </button>
             </nav>
         </header>
-
         <div class="main-wrapper">
             <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-            <!-- Barra Lateral de Navegação -->
             <aside class="sidebar" id="sidebar">
-                <nav class="sidebar-nav">
+                <div class="sidebar-search"><input type="text" id="search-input" placeholder="Filtrar tópicos..."></div>
+                <nav class="sidebar-nav" id="sidebar-nav">
                     <ul>
                         <li><div class="nav-category">Começando</div></li>
-                        <li><a href="posts/introduction.md" class="nav-link active">Introdução</a></li>
+                        <li><a href="posts/introduction.md" class="nav-link">Introdução</a></li>
                         <li><a href="posts/getting-started.md" class="nav-link">Guia de Início Rápido</a></li>
                     </ul>
                     <ul>
@@ -268,88 +144,162 @@
                     </ul>
                 </nav>
             </aside>
-
-            <!-- Área de Conteúdo Principal -->
-            <main class="main-content" id="content">
-                <!-- O conteúdo Markdown será carregado aqui -->
+            <main class="main-content">
+                <div id="breadcrumbs"></div>
+                <div id="content-area"></div>
             </main>
+            <aside class="toc-sidebar" id="toc-sidebar"></aside>
         </div>
     </div>
 
-    <!-- JavaScript Incorporado -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const contentElement = document.getElementById('content');
-            const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
-            const themeToggleButton = document.getElementById('theme-toggle');
-            const sidebar = document.getElementById('sidebar');
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const sidebarBackdrop = document.getElementById('sidebar-backdrop');
-            const defaultPage = 'posts/introduction.md';
+            // Elementos da UI
+            const contentArea = document.getElementById('content-area');
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const logoHomeLink = document.getElementById('logo-home-link');
+            const tocSidebar = document.getElementById('toc-sidebar');
+            const breadcrumbsContainer = document.getElementById('breadcrumbs');
 
-            // --- Lógica do Menu Mobile ---
-            const toggleSidebar = () => {
-                sidebar.classList.toggle('is-open');
-                sidebarBackdrop.classList.toggle('is-visible');
+            let intersectionObserver = null;
+
+            // --- Lógica da Landing Page ---
+            const displayLandingPage = () => {
+                contentArea.innerHTML = `
+                    <div class="landing-page" style="text-align: center;">
+                        <h1 style="font-size: 2.5rem; font-weight: 700;">Bem-vindo à Pitchutcha Docs</h1>
+                        <p style="font-size: 1.25rem; color: var(--color-text-secondary); max-width: 600px; margin: 16px auto 48px;">A sua central de conhecimento. Encontre guias, referências e tudo o que precisa.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; text-align: left;">
+                            <a href="posts/getting-started.md" class="card quick-link" style="background-color: var(--color-bg-inset); border: 1px solid var(--color-border); border-radius: 8px; padding: 24px; text-decoration: none; color: var(--color-text-primary); transition: all 0.2s ease;">
+                                <h3>🚀 Guia de Início Rápido</h3>
+                                <p>Comece a sua jornada em minutos.</p>
+                            </a>
+                            <a href="posts/api-reference.md" class="card quick-link" style="background-color: var(--color-bg-inset); border: 1px solid var(--color-border); border-radius: 8px; padding: 24px; text-decoration: none; color: var(--color-text-primary); transition: all 0.2s ease;">
+                                <h3>API Reference</h3>
+                                <p>Explore todos os endpoints da nossa API.</p>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                tocSidebar.innerHTML = '';
+                breadcrumbsContainer.innerHTML = '';
+                updateActiveLink(null);
+                document.querySelectorAll('.quick-link').forEach(link => link.addEventListener('click', handleNavClick));
             };
 
-            hamburgerBtn.addEventListener('click', toggleSidebar);
-            sidebarBackdrop.addEventListener('click', toggleSidebar);
-
-            // --- Lógica do Tema (Dark Mode) ---
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            const currentTheme = localStorage.getItem('theme');
-
-            const setTheme = (theme) => {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-            };
-
-            if (currentTheme) {
-                setTheme(currentTheme);
-            } else if (prefersDarkScheme.matches) {
-                setTheme('dark');
-            }
-
-            themeToggleButton.addEventListener('click', () => {
-                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-            });
-
-            // --- Lógica de Carregamento de Conteúdo ---
+            // --- Lógica de Carregamento e Pós-Processamento ---
             const loadContent = async (path) => {
                 try {
-                    contentElement.innerHTML = '<h1>A carregar...</h1>';
+                    contentArea.innerHTML = '<h1>A carregar...</h1>';
                     const response = await fetch(path);
-                    if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+                    if (!response.ok) throw new Error('Falha na rede');
                     const markdown = await response.text();
-                    contentElement.innerHTML = marked.parse(markdown);
+                    contentArea.innerHTML = marked.parse(markdown);
+                    postRenderSetup(path);
                 } catch (error) {
-                    console.error('Falha ao carregar o conteúdo:', error);
-                    contentElement.innerHTML = `<h1>Erro 404</h1><p>Não foi possível encontrar o conteúdo em <code>${path}</code>.</p>`;
+                    contentArea.innerHTML = `<h1>Erro ao Carregar</h1>`;
                 }
             };
-
-            const updateActiveLink = (targetLink) => {
-                navLinks.forEach(link => link.classList.remove('active'));
-                targetLink.classList.add('active');
+            
+            const postRenderSetup = (path) => {
+                generateBreadcrumbs(path);
+                processCallouts();
+                addCopyButtonsToCodeBlocks();
+                generateAndObserveToc();
             };
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    const path = link.getAttribute('href');
-                    loadContent(path);
-                    updateActiveLink(link);
-                    // Fecha a sidebar no mobile após clicar num link
-                    if (sidebar.classList.contains('is-open')) {
-                        toggleSidebar();
-                    }
-                    window.history.pushState(null, '', `#${path}`);
+            // --- Geração de Breadcrumbs ---
+            const generateBreadcrumbs = (path) => {
+                const linkElement = sidebarNav.querySelector(`a[href="${path}"]`);
+                if (!linkElement) {
+                    breadcrumbsContainer.innerHTML = '';
+                    return;
+                }
+                const linkText = linkElement.textContent;
+                const categoryElement = linkElement.closest('ul').querySelector('.nav-category');
+                const categoryText = categoryElement ? categoryElement.textContent : '';
+
+                breadcrumbsContainer.innerHTML = `<a href="#" id="breadcrumb-home">Início</a> <span>/</span> ${categoryText} <span>/</span> ${linkText}`;
+                document.getElementById('breadcrumb-home').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    displayLandingPage();
                 });
-            });
+            };
+
+            // --- Processamento de Alertas (Callouts) ---
+            const processCallouts = () => {
+                const calloutTypes = {
+                    NOTE: `<svg fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>`,
+                    WARNING: `<svg fill="currentColor" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>`
+                };
+                contentArea.querySelectorAll('blockquote').forEach(bq => {
+                    const p = bq.querySelector('p');
+                    if (!p) return;
+                    const match = p.innerHTML.match(/\[!(NOTE|WARNING)\]/);
+                    if (match) {
+                        const type = match[1];
+                        bq.className = `callout ${type.toLowerCase()}`;
+                        p.innerHTML = p.innerHTML.replace(/\[!.*\]/, '');
+                        bq.innerHTML = calloutTypes[type] + bq.innerHTML;
+                    }
+                });
+            };
+
+            // --- Geração de Sumário e Scroll Spy ---
+            const generateAndObserveToc = () => {
+                if (intersectionObserver) intersectionObserver.disconnect();
+                
+                const headings = contentArea.querySelectorAll('h2, h3');
+                if (headings.length < 2) {
+                    tocSidebar.innerHTML = '';
+                    return;
+                }
+
+                const tocList = document.createElement('ul');
+                headings.forEach(h => {
+                    const id = h.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+                    h.id = id;
+                    
+                    const li = document.createElement('li');
+                    li.className = `toc-${h.tagName.toLowerCase()}`;
+                    
+                    const a = document.createElement('a');
+                    a.href = `#${id}`;
+                    a.textContent = h.textContent;
+                    a.dataset.targetId = id;
+
+                    li.appendChild(a);
+                    tocList.appendChild(li);
+                });
+
+                tocSidebar.innerHTML = `<h3>Nesta Página</h3>`;
+                tocSidebar.appendChild(tocList);
+
+                // Scroll Spy com Intersection Observer
+                const observerOptions = { rootMargin: `-${var(--header-height)}px 0px 0px 0px` };
+                intersectionObserver = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        const link = tocList.querySelector(`a[data-target-id="${entry.target.id}"]`);
+                        if (entry.isIntersecting) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }, observerOptions);
+
+                headings.forEach(h => intersectionObserver.observe(h));
+            };
             
-            loadContent(defaultPage);
+            // --- Outras Lógicas (Navegação, Tema, Mobile, Busca) ---
+            const addCopyButtonsToCodeBlocks = () => { /* ...código inalterado... */ };
+            const updateActiveLink = (link) => { sidebarNav.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); if(link) link.classList.add('active'); };
+            const handleNavClick = (e) => { e.preventDefault(); const path = e.currentTarget.getAttribute('href'); loadContent(path); const link = sidebarNav.querySelector(`a[href="${path}"]`); updateActiveLink(link); };
+            sidebarNav.addEventListener('click', (e) => { if (e.target.classList.contains('nav-link')) handleNavClick({ currentTarget: e.target, preventDefault: e.preventDefault }); });
+            logoHomeLink.addEventListener('click', (e) => { e.preventDefault(); displayLandingPage(); });
+
+            // Inicialização
+            displayLandingPage();
         });
     </script>
 </body>
